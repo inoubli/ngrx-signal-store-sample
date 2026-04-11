@@ -1,0 +1,22 @@
+:host {
+    display: flex;
+    flex-direction: column
+
+}
+
+.todos-list, .todo-input {
+    width: 100%;
+}
+
+.todo-item {
+    display: flex;
+    align-items: center;
+}
+
+.delete-icon {
+    margin-right: 10px;
+}
+
+.completed-todo-item {
+    text-decoration: line-through;
+}
