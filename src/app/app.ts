@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { TodosStore } from './store/todos.store';
-import { TodosList } from './todos-list/todos-list';
+import { TodosStore } from './features/todos/store/todos.store';
+import { TodosList } from './features/todos/pages/todos-list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({

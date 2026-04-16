@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Todo } from '../model/todo.model';
-import { TODOS } from '../model/mock-data';
+import { Todo } from '../models/todo.model';
+import { TODOS } from '../models/mock-data';
 
 @Injectable({
   providedIn: 'root',

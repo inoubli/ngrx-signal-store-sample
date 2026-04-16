@@ -1,7 +1,7 @@
 import { computed, inject } from '@angular/core';
-import { Todo } from '../model/todo.model';
+import { Todo } from '../models/todo.model';
 import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
-import { TodosService } from '../services/todos.service';
+import { TodosService } from '../data-access/todos.api';
 
 export type TodosFilter = 'all' | 'pending' | 'completed';
 

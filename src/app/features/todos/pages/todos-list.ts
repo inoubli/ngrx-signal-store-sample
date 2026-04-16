@@ -5,7 +5,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonToggleGroup, MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatListModule } from '@angular/material/list';
 import { TodosFilter, TodosStore } from '../store/todos.store';
-import { Todo } from '../model/todo.model';
+import { Todo } from '../models/todo.model';
 import { CommonModule } from '@angular/common';
 
 @Component({
