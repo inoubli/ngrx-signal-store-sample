@@ -1,43 +1,28 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Todo } from '../models/todo.model';
-import { TODOS } from '../models/mock-data';
+import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
-export class TodosService {
-  async getTodos() {
-    await sleep(1000);
-    return TODOS;
+export class TodosApi {
+  readonly apiUrl = 'https://jsonplaceholder.typicode.com/todos';
+  http = inject(HttpClient);
+
+  getTodos(): Observable<Todo[]> {
+    return this.http.get<Todo[]>(this.apiUrl);
   }
 
-  async addTodo(todo: Partial<Todo>): Promise<Todo> {
-    await sleep(1000);
-
-    return {
-      id: Math.random().toString(36).substr(2, 9),
-      ...todo,
-    } as Todo;
+  addTodo(todo: Partial<Todo>): Observable<Todo> {
+    return this.http.post<Todo>(this.apiUrl, todo);
   }
 
-  async updateTodo(id: string, updates: Partial<Todo>): Promise<Todo> {
-    await sleep(1000);
-    const index = TODOS.findIndex((t) => t.id === id);
-    if (index !== -1) {
-      TODOS[index] = { ...TODOS[index], ...updates };
-    }
-    return TODOS[index];
+  updateTodo(id: string, updates: Partial<Todo>): Observable<Todo> {
+    return this.http.put<Todo>(`${this.apiUrl}/${id}`, updates);
   }
 
-  async deleteTodo(id: string) {
-    await sleep(1000);
-    const index = TODOS.findIndex((t) => t.id === id);
-    if (index !== -1) {
-      TODOS.splice(index, 1);
-    }
+  deleteTodo(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
-}
-/** Used to simulate a delay */
-async function sleep(ms: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, ms));
 }

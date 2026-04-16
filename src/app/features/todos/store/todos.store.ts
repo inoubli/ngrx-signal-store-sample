@@ -1,7 +1,9 @@
 import { computed, inject } from '@angular/core';
 import { Todo } from '../models/todo.model';
 import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
-import { TodosService } from '../data-access/todos.api';
+import { rxMethod } from '@ngrx/signals/rxjs-interop';
+import { TodosApi } from '../data-access/todos.api';
+import { pipe, switchMap, tap } from 'rxjs';
 
 export type TodosFilter = 'all' | 'pending' | 'completed';
 
@@ -20,31 +22,69 @@ const initialTodosState: TodosState = {
 export const TodosStore = signalStore(
   { providedIn: 'root' },
   withState(initialTodosState),
-  withMethods((store, todosService = inject(TodosService)) => ({
+  withMethods((store, todosApi = inject(TodosApi)) => ({
     /** Each function is a behavior of the Store */
-    async loadAll() {
-      patchState(store, { loading: true });
-      const todos = await todosService.getTodos();
-      patchState(store, { todos, loading: false });
-    },
+    loadAll: rxMethod<void>(
+      pipe(
+        tap(() => patchState(store, { loading: true })),
+        switchMap(() => todosApi.getTodos()),
+        tap({
+          next: (todos) => patchState(store, { todos, loading: false }),
+          error: () => patchState(store, { loading: false }),
+        }),
+      ),
+    ),
 
-    async addTodo(todo: Partial<Todo>) {
-      patchState(store, { loading: true });
-      const newTodo = await todosService.addTodo(todo);
-      patchState(store, (state) => ({ todos: [...state.todos, newTodo], loading: false }));
-    },
+    addTodo: rxMethod<Partial<Todo>>(
+      pipe(
+        tap(() => patchState(store, { loading: true })),
+        switchMap((todo) => todosApi.addTodo(todo)),
+        tap({
+          next: (newTodo) =>
+            patchState(store, (state) => ({ todos: [...state.todos, newTodo], loading: false })),
+          error: () => patchState(store, { loading: false }),
+        }),
+      ),
+    ),
 
-    async deleteTodo(id: string) {
-      await todosService.deleteTodo(id);
-      patchState(store, (state) => ({ todos: state.todos.filter((todo) => todo.id !== id) }));
-    },
+    deleteTodo: rxMethod<string>(
+      pipe(
+        tap(() => patchState(store, { loading: true })),
 
-    async updateTodo(id: string, updates: Partial<Todo>) {
-      const updatedTodo = await todosService.updateTodo(id, updates);
-      patchState(store, (state) => ({
-        todos: state.todos.map((todo) => (todo.id === id ? { ...todo, ...updatedTodo } : todo)),
-      }));
-    },
+        switchMap((id) =>
+          todosApi.deleteTodo(id).pipe(
+            tap({
+              next: () => {
+                patchState(store, (state) => ({
+                  todos: state.todos.filter((todo) => todo.id !== id),
+                  loading: false,
+                }));
+              },
+              error: () => patchState(store, { loading: false }),
+            }),
+          ),
+        ),
+      ),
+    ),
+
+    updateTodo: rxMethod<{ id: string; updates: Partial<Todo> }>(
+      pipe(
+        // tap(() => patchState(store, { loading: true })),
+        switchMap(({ id, updates }) => todosApi.updateTodo(id, updates)),
+        tap({
+          next: (updatedTodo) => {
+            console.log('Updated todo from API:', updatedTodo);
+            patchState(store, (state) => ({
+              todos: state.todos.map((todo) =>
+                todo.id === updatedTodo.id ? { ...todo, ...updatedTodo } : todo,
+              ),
+              // loading: false,
+            }));
+          },
+          error: () => patchState(store, { loading: false }),
+        }),
+      ),
+    ),
 
     updateFilter(filter: TodosFilter) {
       patchState(store, { filter });

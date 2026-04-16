@@ -3,7 +3,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonToggleGroup, MatButtonToggleModule } from '@angular/material/button-toggle';
-import { MatListModule } from '@angular/material/list';
+import { MatListModule, MatSelectionListChange } from '@angular/material/list';
 import { TodosFilter, TodosStore } from '../store/todos.store';
 import { Todo } from '../models/todo.model';
 import { CommonModule } from '@angular/common';
@@ -37,18 +37,19 @@ export class TodosList {
     });
   }
 
-  async onAddTodo(title: string): Promise<void> {
+  onAddTodo(title: string): void {
     const todo: Todo = { id: Date.now().toString(), title, completed: false };
-    await this.todosStore.addTodo(todo);
+    this.todosStore.addTodo(todo);
   }
 
-  async onDeleteTodo(event: MouseEvent, id: string): Promise<void> {
+  onDeleteTodo(event: MouseEvent, id: string): void {
     event.stopPropagation();
-    await this.todosStore.deleteTodo(id);
+    this.todosStore.deleteTodo(id);
   }
 
-  async onToggleTodoCompletion(id: string, isCompleted: boolean): Promise<void> {
-    await this.todosStore.updateTodo(id, { completed: isCompleted });
+  onToggleTodoCompletion(event: MatSelectionListChange): void {
+    const { selected, value } = event.options[0];
+    this.todosStore.updateTodo({ id: value, updates: { completed: selected } });
   }
 
   onFilterTodos(filter: TodosFilter) {
