@@ -1,23 +1,15 @@
 import { computed, inject } from '@angular/core';
 import { Todo } from '../model/todo.model';
-import {
-  patchState,
-  signalStore,
-  withComputed,
-  withMethods,
-  withProps,
-  withState,
-} from '@ngrx/signals';
+import { patchState, signalStore, withComputed, withMethods, withState } from '@ngrx/signals';
 import { TodosService } from '../services/todos.service';
-import { filter } from 'rxjs';
 
 export type TodosFilter = 'all' | 'pending' | 'completed';
 
-type TodosState = {
+interface TodosState {
   todos: Todo[];
   loading: boolean;
   filter: TodosFilter;
-};
+}
 
 const initialTodosState: TodosState = {
   todos: [],

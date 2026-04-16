@@ -1,22 +1,22 @@
 :host {
-    display: flex;
-    flex-direction: column
-
+  display: flex;
+  flex-direction: column;
 }
 
-.todos-list, .todo-input {
-    width: 100%;
+.todos-list,
+.todo-input {
+  width: 100%;
 }
 
 .todo-item {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .delete-icon {
-    margin-right: 10px;
+  margin-right: 10px;
 }
 
 .completed-todo-item {
-    text-decoration: line-through;
+  text-decoration: line-through;
 }

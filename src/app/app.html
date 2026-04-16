@@ -1,17 +1,16 @@
 <div class="app">
-
   <div class="angular-univ-container">
-    <img src="https://pbs.twimg.com/profile_images/432228398803726336/YR78rN3h.jpeg" alt="profile_image">
+    <img
+      src="https://pbs.twimg.com/profile_images/432228398803726336/YR78rN3h.jpeg"
+      alt="profile_image"
+    />
     <h1>Angular University</h1>
     <a href="https://angular-university.io">angular-university.io</a>
   </div>
 
   @if (!store.loading()) {
-    <todos-list/>
+    <todos-list />
+  } @else {
+    <mat-spinner />
   }
-  @else {
-    <mat-spinner/>
-  }
-
-
 </div>

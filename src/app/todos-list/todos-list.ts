@@ -17,17 +17,16 @@ import { CommonModule } from '@angular/common';
     MatFormFieldModule,
     MatButtonToggleModule,
     MatListModule,
-],
+  ],
   templateUrl: './todos-list.html',
   styleUrl: './todos-list.scss',
 })
 export class TodosList {
-
   todosStore = inject(TodosStore);
 
-  /** filter Signal from <mat-button-toggle-group> 
+  /** filter Signal from <mat-button-toggle-group>
    * Added required since we know it should be present
-  */
+   */
   filter = viewChild.required(MatButtonToggleGroup); // No need for template tag like:  #filterRef
   // OR with #filterRef: filter = viewChild.required<MatButtonToggleGroup>('filterRef');
 
@@ -49,11 +48,10 @@ export class TodosList {
   }
 
   async onToggleTodoCompletion(id: string, isCompleted: boolean): Promise<void> {
-      await this.todosStore.updateTodo(id, { completed: isCompleted });
+    await this.todosStore.updateTodo(id, { completed: isCompleted });
   }
 
   onFilterTodos(filter: TodosFilter) {
     this.todosStore.updateFilter(filter);
   }
-
 }
