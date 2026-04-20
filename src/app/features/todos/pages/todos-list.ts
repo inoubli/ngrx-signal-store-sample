@@ -1,4 +1,4 @@
-import { Component, effect, inject, viewChild } from '@angular/core';
+import { afterNextRender, Component, effect, inject, OnInit, viewChild } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -7,6 +7,7 @@ import { MatListModule, MatSelectionListChange } from '@angular/material/list';
 import { TodosFilter, TodosStore } from '../store/todos.store';
 import { Todo } from '../models/todo.model';
 import { CommonModule } from '@angular/common';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'todos-list',
@@ -17,24 +18,36 @@ import { CommonModule } from '@angular/common';
     MatFormFieldModule,
     MatButtonToggleModule,
     MatListModule,
+    MatProgressSpinner,
   ],
   templateUrl: './todos-list.html',
   styleUrl: './todos-list.scss',
 })
-export class TodosList {
+export class TodosList implements OnInit {
   todosStore = inject(TodosStore);
 
   /** filter Signal from <mat-button-toggle-group>
    * Added required since we know it should be present
    */
   filter = viewChild.required(MatButtonToggleGroup); // No need for template tag like:  #filterRef
-  // OR with #filterRef: filter = viewChild.required<MatButtonToggleGroup>('filterRef');
 
   constructor() {
-    effect(() => {
-      const filterButton = this.filter();
-      filterButton.value = this.todosStore.filter();
+    // Wait for the first DOM rendering cycle, otherwise the ViewChild reference will not be available
+    afterNextRender(() => {
+      effect(() => {
+        const filterButton = this.filter();
+        filterButton.value = this.todosStore.filter();
+      });
     });
+  }
+
+  ngOnInit() {
+    console.log('TodosList initialized');
+    this.loadTodos().then(() => console.log('Todos loaded!'));
+  }
+
+  async loadTodos() {
+    await this.todosStore.loadAll();
   }
 
   onAddTodo(title: string): void {

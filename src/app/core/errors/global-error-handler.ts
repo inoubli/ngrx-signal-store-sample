@@ -8,8 +8,11 @@ export class GlobalErrorHandler implements ErrorHandler {
    * @param error The error to handle
    */
   handleError(error: unknown): void {
-    const appError = this.normalize(error);
-    console.error(appError);
+    // TODO: Uncomment the following lines and make sure normalize is getting the right error message
+    // const appError = this.normalize(error);
+    // console.error(appError);
+    console.error(error);
+
     /**
      * IMPORTANT: no UI logic here
      * Log the error to an external service if needed
