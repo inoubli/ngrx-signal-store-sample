@@ -1,41 +1,44 @@
-<div class="todos-header">
+<div class="u-flex-col u-flex-center u-mb-md">
   <img
     src="https://pbs.twimg.com/profile_images/432228398803726336/YR78rN3h.jpeg"
     alt="profile_image"
   />
   <h1>Angular University</h1>
   <a href="https://angular-university.io">angular-university.io</a>
+  <h1>NgRx Signal Store Todo App</h1>
 </div>
 
-<h1>NgRx Signal Store Todo App</h1>
+<div class="u-flex-col u-surface u-p-md u-border">
+  @if (!todosStore.loading()) {
+    <mat-form-field class="todo-input">
+      <mat-label>Enter a TODO and press Enter</mat-label>
+      <input matInput (keyup.enter)="onAddTodo(input.value)" #input />
+      <mat-icon matSuffix>edit</mat-icon>
+    </mat-form-field>
 
-@if (!todosStore.loading()) {
-  <mat-form-field class="todo-input">
-    <mat-label>Enter a TODO and press Enter</mat-label>
-    <input matInput (keyup.enter)="onAddTodo(input.value)" #input />
-    <mat-icon matSuffix>edit</mat-icon>
-  </mat-form-field>
+    <mat-button-toggle-group
+      #filterRef
+      [value]="todosStore.filter()"
+      (change)="onFilterTodos($event.value)"
+    >
+      <mat-button-toggle value="all">All</mat-button-toggle>
+      <mat-button-toggle value="pending">Pending</mat-button-toggle>
+      <mat-button-toggle value="completed">Completed</mat-button-toggle>
+    </mat-button-toggle-group>
 
-  <mat-button-toggle-group
-    #filterRef
-    [value]="todosStore.filter()"
-    (change)="onFilterTodos($event.value)"
-  >
-    <mat-button-toggle value="all">All</mat-button-toggle>
-    <mat-button-toggle value="pending">Pending</mat-button-toggle>
-    <mat-button-toggle value="completed">Completed</mat-button-toggle>
-  </mat-button-toggle-group>
-
-  <mat-selection-list (selectionChange)="onToggleTodoCompletion($event)" class="todo-list">
-    @for (todo of todosStore.filteredTodos(); track todo.id; let index = $index) {
-      <mat-list-option [value]="todo.id" [selected]="todo.completed">
-        <div class="todo-item">
-          <mat-icon (click)="onDeleteTodo($event, todo.id)" class="delete-icon"> delete </mat-icon>
-          <span [ngClass]="{ 'completed-todo-item': todo.completed }">{{ todo.title }}</span>
-        </div>
-      </mat-list-option>
-    }
-  </mat-selection-list>
-} @else {
-  <mat-spinner />
-}
+    <mat-selection-list (selectionChange)="onToggleTodoCompletion($event)" class="todo-list">
+      @for (todo of todosStore.filteredTodos(); track todo.id; let index = $index) {
+        <mat-list-option [value]="todo.id" [selected]="todo.completed">
+          <div class="todo-item">
+            <mat-icon (click)="onDeleteTodo($event, todo.id)" class="delete-icon">
+              delete
+            </mat-icon>
+            <span [ngClass]="{ 'completed-todo-item': todo.completed }">{{ todo.title }}</span>
+          </div>
+        </mat-list-option>
+      }
+    </mat-selection-list>
+  } @else {
+    <mat-spinner />
+  }
+</div>

@@ -7,7 +7,6 @@ import { Sidebar } from '../components/sidebar/sidebar';
   selector: 'main-layout',
   imports: [RouterOutlet, Header, Sidebar],
   templateUrl: './main-layout.html',
-  styleUrl: './main-layout.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MainLayout {}

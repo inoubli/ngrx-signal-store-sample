@@ -1,0 +1,22 @@
+// Browsers ship with their own default styles (margins, paddings, box model quirks). These differ slightly across engines.
+// This file resets all of those styles to a consistent baseline, so that we can build our own design system on top of it.
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  // Default is `content-box`: width/height apply to content only,
+  // so padding and border are added on top of the declared size.
+  // This makes layout calculations harder and can cause overflow.
+  // `border-box` includes padding and border in the element’s size,
+  // leading to more predictable and stable layouts.
+}
+
+body {
+  margin: 0;
+}
+
+img,
+picture {
+  max-width: 100%;
+  display: block;
+}
