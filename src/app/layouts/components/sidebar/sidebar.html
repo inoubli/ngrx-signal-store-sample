@@ -1,4 +1,26 @@
-<div class="u-flex-col u-p-md">
-  <a>Todos</a>
-  <a>Settings</a>
+<div class="sidebar">
+  <div class="sidebar__header">
+    <button class="sidebar__toggle" (click)="toggleBurgerClicked.emit()">
+      <mat-icon>menu</mat-icon>
+    </button>
+  </div>
+
+  <div class="sidebar__content">
+    <mat-nav-list>
+      @for (item of items; track item.route) {
+        <a
+          mat-list-item
+          [routerLink]="item.route"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+        >
+          <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+
+          <span matListItemTitle class="sidebar__label" [class.is-hidden]="collapsed()">{{
+            item.label
+          }}</span>
+        </a>
+      }
+    </mat-nav-list>
+  </div>
 </div>

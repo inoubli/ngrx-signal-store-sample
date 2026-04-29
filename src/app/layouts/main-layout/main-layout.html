@@ -4,8 +4,10 @@
   </header>
 
   <div class="layout__body">
-    <aside class="layout__sidebar">
-      <main-sidebar />
+    <!-- layout__sidebar control  the width of the sidebar (it should not be handled inside <main-sidebar> it self) -->
+    <aside class="layout__sidebar" [class.layout__sidebar--collapsed]="collapsed()">
+      <!-- main-sidebar owns the content -->
+      <main-sidebar [collapsed]="collapsed()" (toggleBurgerClicked)="toggleSidebar()" />
     </aside>
 
     <main class="layout__content">
